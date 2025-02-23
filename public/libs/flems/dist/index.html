@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Flems</title>
+    <meta charset="utf8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <style>
+        html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+        
+        body {
+            display: block;
+            min-height: 100%;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        .toolbar a {
+            position: absolute;
+            left: -4000px;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="/libs/flems/dist/flems.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        let fContent = '';
+        flem = Flems(document.body, {
+            files: [{
+                name: '.html'
+            }, {
+                name: '.js'
+            }, {
+                name: '.css'
+            }],
+            selected: '.html',
+        });
+        window.addEventListener('message', ({ data }) => {
+            let b = document.querySelector('.toolbar a');
+            console.log(data);
+            b.dispatchEvent(new Event('mousedown'));
+            fContent = b.href.substring(18);
+            console.log(fContent);
+        });
+        
+    </script>
+</body>
+
+</html>

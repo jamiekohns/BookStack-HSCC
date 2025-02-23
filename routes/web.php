@@ -1,25 +1,28 @@
 <?php
 
-use BookStack\Access\Controllers as AccessControllers;
-use BookStack\Activity\Controllers as ActivityControllers;
-use BookStack\Api\ApiDocsController;
-use BookStack\Api\UserApiTokenController;
 use BookStack\App\HomeController;
 use BookStack\App\MetaController;
-use BookStack\Entities\Controllers as EntityControllers;
-use BookStack\Exports\Controllers as ExportControllers;
-use BookStack\Http\Middleware\VerifyCsrfToken;
-use BookStack\Permissions\PermissionsController;
-use BookStack\References\ReferenceController;
-use BookStack\Search\SearchController;
-use BookStack\Settings as SettingControllers;
-use BookStack\Sorting as SortingControllers;
-use BookStack\Theming\ThemeController;
-use BookStack\Uploads\Controllers as UploadControllers;
-use BookStack\Users\Controllers as UserControllers;
-use Illuminate\Session\Middleware\StartSession;
+use BookStack\App\FlemsController;
+use BookStack\Api\ApiDocsController;
 use Illuminate\Support\Facades\Route;
+use BookStack\Search\SearchController;
+use BookStack\Theming\ThemeController;
+use BookStack\App\AttendanceController;
+use BookStack\App\PlaygroundController;
+use BookStack\Api\UserApiTokenController;
+use BookStack\Sorting as SortingControllers;
+use BookStack\References\ReferenceController;
+use BookStack\Settings as SettingControllers;
+use BookStack\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
+use BookStack\Permissions\PermissionsController;
+use BookStack\Users\Controllers as UserControllers;
+use BookStack\Access\Controllers as AccessControllers;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use BookStack\Exports\Controllers as ExportControllers;
+use BookStack\Uploads\Controllers as UploadControllers;
+use BookStack\Entities\Controllers as EntityControllers;
+use BookStack\Activity\Controllers as ActivityControllers;
 
 // Status & Meta routes
 Route::get('/status', [SettingControllers\StatusController::class, 'show']);
@@ -219,6 +222,17 @@ Route::middleware('auth')->group(function () {
     // Other Pages
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/home', [HomeController::class, 'index']);
+
+    // JS PLayground
+    Route::get('/playground/flems.html', function () {
+        return redirect('/libs/flems/dist/flems.html');
+    });
+    Route::get('/playground', [PlaygroundController::class, 'index']);
+    Route::get('/playground/new', [PlaygroundController::class, 'new']);
+    Route::get('/playground/{id}', [PlaygroundController::class, 'show']);
+
+    // Atendance Module
+    Route::get('/attendance', [AttendanceController::class, 'index']);
 
     // Permissions
     Route::get('/permissions/form-row/{entityType}/{roleId}', [PermissionsController::class, 'formRowForRole']);

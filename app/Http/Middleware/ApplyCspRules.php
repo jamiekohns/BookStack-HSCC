@@ -33,7 +33,7 @@ class ApplyCspRules
         $response = $next($request);
 
         $cspHeader = $this->cspService->getCspHeader();
-        $response->headers->set('Content-Security-Policy', $cspHeader, false);
+        // $response->headers->set('Content-Security-Policy', $cspHeader, false);
 
         return $response;
     }

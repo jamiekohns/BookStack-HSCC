@@ -4,7 +4,7 @@ namespace BookStack;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Playground extends Model
+class playground extends Model
 {
     //
 }

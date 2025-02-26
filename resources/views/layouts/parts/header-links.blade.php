@@ -2,9 +2,11 @@
 
 @if (user()->hasAppAccess())
     <a class="hide-over-l" href="{{ url('/search') }}">@icon('search'){{ trans('common.search') }}</a>
-    @if(userCanOnAny('view', \BookStack\Entities\Models\Bookshelf::class) || userCan('bookshelf-view-all') || userCan('bookshelf-view-own'))
-        <a href="{{ url('/shelves') }}"
-           data-shortcut="shelves_view">@icon('bookshelf'){{ trans('entities.shelves') }}</a>
+    @if(!user()->isGuest())
+        <!-- <a href="{{ url('/shelves') }}"
+           data-shortcut="shelves_view">@icon('bookshelf'){{ trans('entities.shelves') }}</a> -->
+        <a href="{{ url('/attendance') }}"><img src="/icons/person_check_64.png" style="filter: invert(1); width: 14px; height: 14px;"> Attendance</a>
+        <a href="{{ url('/playground') }}"><img src="/icons/tiles_64.png" style="filter: invert(1); width: 14px; height: 14px;"> Playground</a>
     @endif
     <a href="{{ url('/books') }}" data-shortcut="books_view">@icon('books'){{ trans('entities.books') }}</a>
     @if(!user()->isGuest() && userCan('settings-manage'))

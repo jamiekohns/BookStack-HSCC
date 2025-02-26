@@ -2,32 +2,33 @@
 
 namespace BookStack\Users\Models;
 
-use BookStack\Access\Mfa\MfaValue;
-use BookStack\Access\Notifications\ResetPasswordNotification;
-use BookStack\Access\SocialAccount;
-use BookStack\Activity\Models\Favourite;
-use BookStack\Activity\Models\Loggable;
-use BookStack\Activity\Models\Watch;
-use BookStack\Api\ApiToken;
+use Exception;
+use Carbon\Carbon;
 use BookStack\App\Model;
+use BookStack\Api\ApiToken;
 use BookStack\App\Sluggable;
+use BookStack\Uploads\Image;
+use BookStack\Access\Mfa\MfaValue;
+use Illuminate\Support\Collection;
+use BookStack\Access\SocialAccount;
+use BookStack\Activity\Models\Watch;
+use Illuminate\Auth\Authenticatable;
+use BookStack\Activity\Models\Loggable;
+use BookStack\Activity\Models\Favourite;
+use BookStack\Translation\LocaleManager;
+use Illuminate\Notifications\Notifiable;
+use BookStack\Entities\Models\Playground;
+use Illuminate\Database\Eloquent\Builder;
 use BookStack\Entities\Tools\SlugGenerator;
 use BookStack\Translation\LocaleDefinition;
-use BookStack\Translation\LocaleManager;
-use BookStack\Uploads\Image;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use BookStack\Access\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
 
 /**
  * Class User.

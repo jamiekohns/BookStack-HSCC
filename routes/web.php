@@ -220,19 +220,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/import/{id}', [ExportControllers\ImportController::class, 'delete']);
 
     // Other Pages
-    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/home', [HomeController::class, 'index']);
 
     // JS PLayground
     Route::get('/playground/flems.html', function () {
         return redirect('/libs/flems/dist/flems.html');
     });
-    Route::get('/playground', [PlaygroundController::class, 'index']);
-    Route::get('/playground/new', [PlaygroundController::class, 'new']);
-    Route::get('/playground/{id}', [PlaygroundController::class, 'show']);
+    Route::get('/playground', [PlaygroundController::class, 'index'])->name('playground');
+    Route::post('/playground', [PlaygroundController::class, 'create']);
+    Route::get('/playground/new', [PlaygroundController::class, 'create']);
+    Route::get('/playground/create', [PlaygroundController::class, 'create']);
+    Route::get('/playground/{id}', [PlaygroundController::class, 'view']);
+    Route::post('/playground/{id}/update', [PlaygroundController::class, 'update']);
+    Route::get('/playground/{id}/delete', [PlaygroundController::class, 'delete']);
+    Route::get('/playground/{id}/content', [PlaygroundController::class, 'getContent']);
+    Route::get('/playground/{id}/copy', [PlaygroundController::class, 'copy']);
+    Route::get('/playground/{id}/toggle', [PlaygroundController::class, 'toggle']);
 
     // Atendance Module
-    Route::get('/attendance', [AttendanceController::class, 'index']);
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
 
     // Permissions
     Route::get('/permissions/form-row/{entityType}/{roleId}', [PermissionsController::class, 'formRowForRole']);

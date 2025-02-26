@@ -15,9 +15,13 @@ return new class extends Migration
             $table->increments('id');
             $table->string('name');
             $table->text('data');
-            $table->integer('user_id');
-            $table->tinyInteger('template', false, true);
+            $table->integer('user_id')->unsigned(); 
+            $table->integer('source_id')->unsigned()->nullable();
+            $table->tinyInteger('published', false, true)->default(false);
+            $table->tinyInteger('locked', false, true)->default(false);
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('source_id')->references('id')->on('playground')->onDelete('set null');
         });
     }
 

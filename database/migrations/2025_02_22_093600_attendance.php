@@ -33,6 +33,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendance');
+        Schema::dropIfExists('attendance_session');
+        Schema::dropIfExists('attendance_checkin');
     }
 };

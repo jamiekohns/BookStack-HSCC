@@ -17,6 +17,7 @@ use BookStack\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Session\Middleware\StartSession;
 use BookStack\Permissions\PermissionsController;
 use BookStack\Users\Controllers as UserControllers;
+use BookStack\Http\Middleware\PreventResponseCaching;
 use BookStack\Access\Controllers as AccessControllers;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use BookStack\Exports\Controllers as ExportControllers;
@@ -225,13 +226,24 @@ Route::middleware('auth')->group(function () {
 
     // JS PLayground
     Route::get('/playground/flems.html', function () {
-        return redirect('/libs/flems/dist/flems.html');
-    });
+        return File::get(public_path().'/libs/flems/dist/flems.html');
+    })->middleware(PreventResponseCaching::class);
+
+    Route::get('/playground/flems.js', function () {
+        return File::get(public_path().'/libs/flems/dist/flems.js');
+    })->middleware(PreventResponseCaching::class);
+
+    Route::get('/playground/playground.js', function () {
+
+        return File::get(public_path().'/playground.js');
+    })->middleware(PreventResponseCaching::class);
+
     Route::get('/playground', [PlaygroundController::class, 'index'])->name('playground');
     Route::post('/playground', [PlaygroundController::class, 'create']);
     Route::get('/playground/new', [PlaygroundController::class, 'create']);
     Route::get('/playground/create', [PlaygroundController::class, 'create']);
     Route::get('/playground/{id}', [PlaygroundController::class, 'view']);
+    Route::get('/playground/{id}/status', [PlaygroundController::class, 'status']);
     Route::post('/playground/{id}/update', [PlaygroundController::class, 'update']);
     Route::get('/playground/{id}/delete', [PlaygroundController::class, 'delete']);
     Route::get('/playground/{id}/content', [PlaygroundController::class, 'getContent']);

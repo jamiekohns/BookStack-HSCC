@@ -151,7 +151,6 @@ class PlaygroundController extends Controller
 
         $playground->save();
 
-        // return redirect()->action([PlaygroundController::class, 'index']);
         return response()->json([
             'playground' => $playground->toJson()
         ]);
@@ -206,5 +205,13 @@ class PlaygroundController extends Controller
         $playground->delete();
 
         return redirect()->action([PlaygroundController::class, 'index']);
+    }
+
+    public function status(Request $request, int $id)
+    {
+        $playground = Playground::find($id);
+        $pgJson = json_decode($playground);
+
+        return response()->json($pgJson);
     }
 }

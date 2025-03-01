@@ -13,6 +13,22 @@
             height: 32px;
             width: 32px;
         }
+
+        .delete {
+            filter: invert(12%) sepia(99%) saturate(3695%) hue-rotate(358deg) brightness(95%) contrast(108%);
+        }
+        .locked {
+            filter: invert(12%) sepia(99%) saturate(3695%) hue-rotate(358deg) brightness(95%) contrast(108%);
+        }
+        .unlocked {
+            filter: invert(16%) sepia(100%) saturate(5904%) hue-rotate(104deg) brightness(95%) contrast(103%);
+        }
+        .copy {
+            filter: invert(7%) sepia(83%) saturate(7258%) hue-rotate(206deg) brightness(87%) contrast(142%);
+        }
+        .disabled {
+            filter: invert(94%) sepia(0%) saturate(4185%) hue-rotate(19deg) brightness(80%) contrast(76%);
+        }
     </style>
     <div class="container grid menu-actions">
         <div class="menu-action">
@@ -65,31 +81,32 @@
                     <td>{{ $playground->updated_at->diffForHumans() }}</td>
                     <td class="actions">
                     @if (Auth::user()->hasRole(5) || $playground->published)
-                        @if (!$playground->source_id)
+                        @if (!$playground->source_id || Auth::user()->hasRole(5))
                             <a href="/playground/{{ $playground->id }}/copy" title="Make a copy" class="make-copy" data-name="{{ $playground->name }}">
-                                <img src="/icons/copy_64.png" alt="Make a copy">
+                                <img src="/icons/copy_64.png" alt="Make a copy" class="copy">
                             </a>
                         @else 
-                            <img src="/icons/copy_64.png" alt="This is a copy" style="opacity: .4;" title="This is a copy and cannot be re-copied">
+                            <!-- <img src="/icons/copy_64.png" alt="This is a copy" class="disabled" title="This is a copy and cannot be re-copied"> -->
                         @endif
                     @endif
                     @if (Auth::user()->hasRole(5) || 
-                        Auth::user()->hasRole(1) || 
                         $playground->user->id == Auth::user()->id)
-                        <a href="/playground/{{ $playground->id }}/delete" title="Delete">
+                        <a href="/playground/{{ $playground->id }}/delete" title="Delete" class="delete">
                             <img src="/icons/trash_64.png" alt="Delete this playground">
                         </a>
                     @endif
-                    @if (Auth::user()->hasRole(5) || 
-                        Auth::user()->hasRole(1))
-                        <a href="/playground/{{ $playground->id }}/toggle?locked=1" title="Unlock" class="ajax locked"  data-id="{{ $playground->id }}">
-                            <img src="/icons/{{ $playground->locked ? 'unlock' : 'lock' }}_64.png">
+                    @if (Auth::user()->hasRole(5))
+                        <a href="/playground/{{ $playground->id }}/toggle?locked=1" 
+                            title="{{ $playground->locked ? 'Unlock' : 'Lock' }}" 
+                            class="ajax {{ $playground->locked ? 'locked' : 'unlocked' }} lock"  
+                            data-id="{{ $playground->id }}">
+                            <img src="/icons/{{ $playground->locked ? 'lock' : 'unlock' }}_64.png">
                         </a>
                     @endif
                     @if (Auth::user()->hasRole(5) || 
                         Auth::user()->hasRole(1))
                         <a href="/playground/{{ $playground->id }}/toggle?published=1" title="Unpublish" class="ajax published" data-id="{{ $playground->id }}">
-                            <img src="/icons/{{ $playground->published ? 'unsend' : 'send' }}_64.png">
+                            <img src="/icons/{{ $playground->published ? 'send' : 'unsend' }}_64.png">
                         </a>
                     @endif
                     </td>
@@ -100,7 +117,6 @@
     </div>
     
     <script>
-        // const container = document.getElementById('playgrounds');
         const container = window;
         container.addEventListener('click', function(event) {
             const target = event.target;
@@ -114,12 +130,20 @@
                     parent.href += '?name='+prompt('Enter a name for this copy', name + ' COPY');
                 break;
 
+                case classes.contains('delete'):
+                    if (confirm("Are you SURE you want to delete this playground?") !== true) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return;
+                    }
+                break;
+
                 case target.id == 'create':
                     parent.href += '?name='+prompt('Enter a name for your new playground');
                 break;
 
                 case classes.contains('ajax'):
-                    let act = classes.contains('locked') ? 'locked' : 'published';
+                    let act = classes.contains('lock') ? 'locked' : 'published';
                     let url = '/playground/'+id+'/toggle?'+act+'=1';
 
                     event.preventDefault();
@@ -135,7 +159,7 @@
                         if (data.playground) {
                             const pg = JSON.parse(data.playground);
 
-                            parent.parentElement.querySelector('a.locked img').src = pg.locked ? '/icons/unlock_64.png' : '/icons/lock_64.png';
+                            parent.parentElement.querySelector('a.lock img').src = pg.locked ? '/icons/unlock_64.png' : '/icons/lock_64.png';
                             parent.parentElement.querySelector('a.published img').src = pg.published ? '/icons/unsend_64.png' : '/icons/send_64.png';
                             
                             console.log(pg);
